@@ -1,5 +1,5 @@
-import AST.ASTBuilder;
 import AST.Program;
+import Visitor.BaseVisitor;
 import gen.DartLexer;
 import gen.DartParser;
 import org.antlr.v4.gui.TreeViewer;
@@ -76,10 +76,12 @@ public class Main {
             System.out.println("\n--- Parse Tree LISP Representation ---");
             System.out.println(tree.toStringTree(parser));
 
-            // 4. بناء وطباعة كائنات شجرة البناء المجردة (AST Generation)
-            System.out.println("\n========== [3] ABSTRACT SYNTAX TREE (AST) ==========");
-            ASTBuilder astBuilder = new ASTBuilder();
-            Program ast = (Program) astBuilder.visit(tree);
+            // 4. مرحلة الزائر وجدول الرموز (Visitor & Symbol Table & AST)
+            System.out.println("\n========== [3] VISITOR & SYMBOL TABLE & AST ==========");
+            BaseVisitor visitor = new BaseVisitor();
+            Program ast = (Program) visitor.visit(tree);
+
+            System.out.println("\n--- Generated Abstract Syntax Tree (AST) ---");
             System.out.println(ast);
 
             // 5. رسم الشجرة بيانياً عبر واجهة رسومية (GUI TreeViewer)
@@ -93,7 +95,7 @@ public class Main {
 
                     List<String> ruleNames = Arrays.asList(parser.getRuleNames());
                     TreeViewer viewer = new TreeViewer(ruleNames, tree);
-                    viewer.setScale(1.25); // تكبير الشجرة لسهولة القراءة
+                    viewer.setScale(1.25);
                     viewer.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
                     panel.add(viewer, BorderLayout.CENTER);
